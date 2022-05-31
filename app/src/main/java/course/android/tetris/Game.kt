@@ -31,6 +31,7 @@ class Game : AppCompatActivity(), View.OnClickListener {
     var delayLowerLimit = 0
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        setContentView(R.layout.activity_game)
         gameState = GameState(24, 20, TetraminoType.getRandomTetramino())
         drawView = DrawView(this, gameState!!)
         drawView!!.setBackgroundColor(Color.WHITE)
