@@ -4,11 +4,11 @@ plugins {
 }
 
 android {
-    compileSdk 32
+    compileSdk 21
 
     defaultConfig {
         applicationId "course.android.tetris"
-        minSdk 28
+        minSdk 21
         targetSdk 32
         versionCode 1
         versionName "1.0"
