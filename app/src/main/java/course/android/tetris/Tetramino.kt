@@ -23,13 +23,13 @@ enum class TetraminoType{
 
 class Tetramino {
 
-    /*var blocks : BasicBlock[]
+    var blocks : BasicBlock[]
     var type : TetraminoType = null
 
     constructor(type: TetraminoType, tetraId: Int) {
         val coordinates: Array<Coordinate>
         when (type) {
-            TetraminoType.SQUARE_SHAPED -> {
+            TetraminoType.SQUARE -> {
                 coordinates = arrayOf<Coordinate>(
                     Coordinate(0, 10),
                     Coordinate(1, 10),
@@ -38,7 +38,7 @@ class Tetramino {
                 )
                 blocks = blocksGenerator(tetraId, 1, coordinates)
             }
-            TetraminoType.INV_L_SHAPED -> {
+            TetraminoType.INV_L_SHAPE -> {
                 coordinates = arrayOf<Coordinate>(
                     Coordinate(0, 10),
                     Coordinate(0, 11),
@@ -47,7 +47,7 @@ class Tetramino {
                 )
                 blocks = blocksGenerator(tetraId, 2, coordinates)
             }
-            TetraminoType.L_SHAPED -> {
+            TetraminoType.L_SHAPE -> {
                 coordinates = arrayOf<Coordinate>(
                     Coordinate(0, 11),
                     Coordinate(0, 10),
@@ -56,7 +56,7 @@ class Tetramino {
                 )
                 blocks = blocksGenerator(tetraId, 3, coordinates)
             }
-            TetraminoType.T_SHAPED -> {
+            TetraminoType.T_SHAPE -> {
                 coordinates = arrayOf<Coordinate>(
                     Coordinate(1, 10),
                     Coordinate(0, 10),
@@ -65,7 +65,7 @@ class Tetramino {
                 )
                 blocks = blocksGenerator(tetraId, 4, coordinates)
             }
-            TetraminoType.Z_SHAPED -> {
+            TetraminoType.Z_SHAPE -> {
                 coordinates = arrayOf<Coordinate>(
                     Coordinate(1, 11),
                     Coordinate(1, 10),
@@ -74,7 +74,7 @@ class Tetramino {
                 )
                 blocks = blocksGenerator(tetraId, 5, coordinates)
             }
-            TetraminoType.INV_Z_SHAPED -> {
+            TetraminoType.INV_Z_SHAPE -> {
                 coordinates = arrayOf<Coordinate>(
                     Coordinate(1, 11),
                     Coordinate(0, 11),
@@ -83,7 +83,7 @@ class Tetramino {
                 )
                 blocks = blocksGenerator(tetraId, 6, coordinates)
             }
-            TetraminoType.LINE_SHAPED -> {
+            TetraminoType.LINE -> {
                 coordinates = arrayOf<Coordinate>(
                     Coordinate(0, 10),
                     Coordinate(1, 10),
@@ -149,6 +149,6 @@ class Tetramino {
                 referenceBlock.coordinate
             )
         }
-    }*/
+    }
 
 }
