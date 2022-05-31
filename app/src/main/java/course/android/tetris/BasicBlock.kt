@@ -1,6 +1,6 @@
 package course.android.tetris
 
-internal enum class BasicBlockState {
+enum class BasicBlockState {
     ON_EMPTY, ON_TETRAMINO
 }
 
