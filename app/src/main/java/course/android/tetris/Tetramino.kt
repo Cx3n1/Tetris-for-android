@@ -2,7 +2,7 @@ package course.android.tetris
 
 import java.util.*
 
-enum class TetraminoType{
+enum class TetraminoType {
     SQUARE,
     LINE,
     T_SHAPE,
@@ -11,20 +11,23 @@ enum class TetraminoType{
     L_SHAPE,
     INV_L_SHAPE;
 
+    companion object {
 
-    private val VALUES: Array<TetraminoType> = values()
-    private val SIZE = VALUES.size
-    private val RANDOM = Random()
+        private val VALUES: Array<TetraminoType> = values()
+        private val SIZE = VALUES.size
+        private val RANDOM = Random()
 
-    open fun getRandomTetramino(): TetraminoType? {
-        return VALUES[RANDOM.nextInt(SIZE)]
+
+        open fun getRandomTetramino(): TetraminoType? {
+            return VALUES[RANDOM.nextInt(SIZE)]
+        }
     }
 }
 
 class Tetramino {
 
-    var blocks : BasicBlock[]
-    var type : TetraminoType = null
+    var blocks : Array<BasicBlock?>
+    var type : TetraminoType? = null
 
     constructor(type: TetraminoType, tetraId: Int) {
         val coordinates: Array<Coordinate>
@@ -36,7 +39,7 @@ class Tetramino {
                     Coordinate(1, 11),
                     Coordinate(0, 11)
                 )
-                blocks = blocksGenerator(tetraId, 1, coordinates)
+                blocks = this.blocksGenerator(tetraId, 1, coordinates)
             }
             TetraminoType.INV_L_SHAPE -> {
                 coordinates = arrayOf<Coordinate>(
@@ -115,27 +118,28 @@ class Tetramino {
     fun copy(tetraId: Int): Tetramino {
         val newBlocks = arrayOfNulls<BasicBlock>(blocks.size)
         for (itr in blocks.indices) {
-            newBlocks[itr] = blocks[itr].copy()
-            newBlocks[itr].tetraId = tetraId
+            newBlocks[itr] = blocks[itr]?.copy()
+            newBlocks[itr]!!.tetraId = tetraId
         }
         return Tetramino(newBlocks)
     }
 
     fun moveDown() {
         for (block in blocks) {
-            block.coordinate.y++
+            block!!.coordinate.y++
+
         }
     }
 
     fun moveLeft() {
         for (block in blocks) {
-            block.coordinate.x--
+            block!!.coordinate.x--
         }
     }
 
     fun moveRight() {
         for (block in blocks) {
-            block.coordinate.x++
+            block!!.coordinate.x++
         }
     }
 
@@ -143,10 +147,10 @@ class Tetramino {
         val referenceBlock = blocks[0]
         for (block in blocks) {
             val baseCoordinate: Coordinate =
-                Coordinate.sub(block.coordinate, referenceBlock.coordinate)
-            block.coordinate = Coordinate.add(
+                Coordinate.sub(block!!.coordinate, referenceBlock!!.coordinate)
+            block!!.coordinate = Coordinate.add(
                 Coordinate.rotateAntiClock(baseCoordinate),
-                referenceBlock.coordinate
+                referenceBlock!!.coordinate
             )
         }
     }

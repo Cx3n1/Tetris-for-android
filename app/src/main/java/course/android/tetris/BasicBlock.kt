@@ -4,7 +4,7 @@ enum class BasicBlockState {
     ON_EMPTY, ON_TETRAMINO
 }
 
-internal class BasicBlock {
+class BasicBlock {
     var colour: Int
     var tetraId: Int
     var coordinate: Coordinate

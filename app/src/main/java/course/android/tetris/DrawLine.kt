@@ -6,7 +6,7 @@ import android.graphics.Color
 import android.graphics.Paint
 import android.view.View
 
-internal class DrawView(context: Context?, gameState: GameState) :
+class DrawView(context: Context?, gameState: GameState) :
     View(context) {
     var yOffset: Int
     var paint: Paint
@@ -24,11 +24,11 @@ internal class DrawView(context: Context?, gameState: GameState) :
         }
     }
 
-    private fun DrawMatrix(matrix: Array<Array<BasicBlock>>, canvas: Canvas) {
+    private fun DrawMatrix(matrix: Array<Array<BasicBlock?>>, canvas: Canvas) {
         for (i in 0..23) {
             for (j in 0..19) {
-                if (matrix[i][j].state === BasicBlockState.ON_EMPTY) continue
-                val color = getBlockColorCode(matrix[i][j].colour)
+                if (matrix[i][j]!!.state === BasicBlockState.ON_EMPTY) continue
+                val color = getBlockColorCode(matrix[i][j]!!.colour)
                 val p = Paint()
                 p.color = color
                 canvas.drawRect(
@@ -42,7 +42,7 @@ internal class DrawView(context: Context?, gameState: GameState) :
         }
     }
 
-    private fun Clear(matrix: Array<Array<BasicBlock>>, canvas: Canvas) {
+    private fun Clear(matrix: Array<Array<BasicBlock?>>, canvas: Canvas) {
         val p = Paint()
         p.color = Color.WHITE
         for (i in 0..23) {
@@ -60,11 +60,11 @@ internal class DrawView(context: Context?, gameState: GameState) :
 
     private fun DrawTetramino(tetramino: Tetramino, canvas: Canvas) {
         for (block in tetramino.blocks) {
-            val color = getBlockColorCode(block.colour)
+            val color = getBlockColorCode(block!!.colour)
             val p = Paint()
             p.color = color
             canvas.drawRect(
-                (42 + block.coordinate.x * 50).toFloat(),
+                (42 + block!!.coordinate.x * 50).toFloat(),
                 (yOffset + block.coordinate.y * 50 + 2).toFloat(),
                 (88 + block.coordinate.x * 50).toFloat(),
                 (yOffset + (block.coordinate.y + 1) * 50 - 2).toFloat(), p
