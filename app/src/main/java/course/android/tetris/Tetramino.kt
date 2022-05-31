@@ -23,7 +23,7 @@ enum class TetraminoType{
 
 class Tetramino {
 
-    var blocks : BasicBlock[]
+    /*var blocks : BasicBlock[]
     var type : TetraminoType = null
 
     constructor(type: TetraminoType, tetraId: Int) {
@@ -149,6 +149,6 @@ class Tetramino {
                 referenceBlock.coordinate
             )
         }
-    }
+    }*/
 
 }
