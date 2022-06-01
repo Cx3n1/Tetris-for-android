@@ -1,4 +1,4 @@
-package course.android.tetris
+package course.android.tetris.data
 
 class Coordinate {
     var y: Int = 0
@@ -15,7 +15,7 @@ class Coordinate {
         }
 
 
-        fun sub(A: Coordinate, B: Coordinate): Coordinate {
+        fun subtract(A: Coordinate, B: Coordinate): Coordinate {
             return Coordinate(A.y - B.y, A.x - B.x)
         }
 

@@ -1,35 +1,39 @@
-package course.android.tetris
+package course.android.tetris.data
 
 enum class BasicBlockState {
     ON_EMPTY, ON_TETRAMINO
 }
 
 class BasicBlock {
-    var colour: Int
+
+    var color: Int
+    /***
+     * which block is it by index in full tetramino figure
+     */
     var tetraId: Int
     var coordinate: Coordinate
     var state: BasicBlockState
 
     constructor(row: Int, column: Int) {
-        colour = -1
+        color = -1
         tetraId = -1
         coordinate = Coordinate(row, column)
         state = BasicBlockState.ON_EMPTY
     }
 
     constructor(colour: Int, tetraId: Int, coordinate: Coordinate, state: BasicBlockState) {
-        this.colour = colour
+        this.color = colour
         this.tetraId = tetraId
         this.coordinate = coordinate
         this.state = state
     }
 
     fun copy(): BasicBlock {
-        return BasicBlock(colour, tetraId, coordinate, state)
+        return BasicBlock(color, tetraId, coordinate, state)
     }
 
     fun set(B: BasicBlock) {
-        colour = B.colour
+        color = B.color
         tetraId = B.tetraId
         coordinate.y = B.coordinate.y
         coordinate.x = B.coordinate.x
@@ -37,7 +41,7 @@ class BasicBlock {
     }
 
     fun setEmptyBlock(coordinate: Coordinate) {
-        colour = -1
+        color = -1
         tetraId = -1
         this.coordinate.x = coordinate.x
         this.coordinate.y = coordinate.y

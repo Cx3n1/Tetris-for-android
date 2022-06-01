@@ -5,32 +5,40 @@ import android.graphics.Canvas
 import android.graphics.Color
 import android.graphics.Paint
 import android.view.View
+import course.android.tetris.data.BasicBlock
+import course.android.tetris.data.BasicBlockState
+import course.android.tetris.data.Tetramino
 
 class DrawView(context: Context?, gameState: GameState) :
     View(context) {
     var yOffset: Int
     var paint: Paint
     var gameState: GameState
+
+
     private fun getBlockColorCode(color: Int): Int {
         return when (color) {
-            1 -> Color.BLUE
-            2 -> Color.YELLOW
-            3 -> Color.RED
-            4 -> Color.GREEN
-            5 -> Color.CYAN
-            6 -> Color.MAGENTA
-            7 -> Color.DKGRAY
+            1 -> Color.rgb(255, 214, 10)
+            2 -> Color.rgb(29,53,87)
+            3 -> Color.rgb(247,184,1)
+            4 -> Color.rgb(92,0,139)
+            5 -> Color.rgb(208, 0, 0)
+            6 -> Color.rgb(85, 166, 48)
+            7 -> Color.rgb(0, 180, 216)
             else -> Color.TRANSPARENT
         }
     }
 
     private fun DrawMatrix(matrix: Array<Array<BasicBlock?>>, canvas: Canvas) {
-        for (i in 0..23) {
-            for (j in 0..19) {
+        for (i in 0..(Game.BOARD_ROWS-1)) {
+            for (j in 0..(Game.BOARD_COLUMNS - 1)) {
                 if (matrix[i][j]!!.state === BasicBlockState.ON_EMPTY) continue
-                val color = getBlockColorCode(matrix[i][j]!!.colour)
+
+                val color = getBlockColorCode(matrix[i][j]!!.color)
                 val p = Paint()
+
                 p.color = color
+
                 canvas.drawRect(
                     (42 + j * 50).toFloat(),
                     (yOffset + i * 50 + 2).toFloat(),
@@ -45,8 +53,8 @@ class DrawView(context: Context?, gameState: GameState) :
     private fun Clear(matrix: Array<Array<BasicBlock?>>, canvas: Canvas) {
         val p = Paint()
         p.color = Color.WHITE
-        for (i in 0..23) {
-            for (j in 0..19) {
+        for (i in 0..(Game.BOARD_ROWS-1)) {
+            for (j in 0..(Game.BOARD_COLUMNS - 1)) {
                 canvas.drawRect(
                     (42 + j * 50).toFloat(),
                     (yOffset + i * 50 + 2).toFloat(),
@@ -60,7 +68,7 @@ class DrawView(context: Context?, gameState: GameState) :
 
     private fun DrawTetramino(tetramino: Tetramino, canvas: Canvas) {
         for (block in tetramino.blocks) {
-            val color = getBlockColorCode(block!!.colour)
+            val color = getBlockColorCode(block!!.color)
             val p = Paint()
             p.color = color
             canvas.drawRect(
@@ -116,7 +124,7 @@ class DrawView(context: Context?, gameState: GameState) :
         paint.strokeWidth = 5f
         Boundary(canvas)
         grid(canvas)
-        if (gameState.status) {
+        if (gameState.gameIsRunning) {
             Clear(gameState.board, canvas)
             DrawMatrix(gameState.board, canvas)
             DrawTetramino(gameState.falling, canvas)

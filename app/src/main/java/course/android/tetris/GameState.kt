@@ -1,6 +1,7 @@
 package course.android.tetris
 
 import android.util.SparseArray
+import course.android.tetris.data.*
 
 
 class GameState(
@@ -8,22 +9,24 @@ class GameState(
     private val columns: Int,
     fallingTetraminoType: TetraminoType?
 ) {
-    var status = true
+    var gameIsRunning = true
     var score = 0
     var pause = false
     var board: Array<Array<BasicBlock?>>
     var falling: Tetramino
-    var difficultMode = false
+    var difficultMode = false //remove this
     private var ctr = 0
     private val tetraminos: SparseArray<Tetramino>
-    private fun getCoordinateBlock(coordinate: Coordinate): BasicBlock? {
+
+    private fun getBlockOnBoardWith(coordinate: Coordinate): BasicBlock? {
         return board[coordinate.y][coordinate.x]
     }
 
     private fun isConflicting(coordinate: Coordinate): Boolean {
-        return if (coordinate.x < 0 || coordinate.x >= columns || coordinate.y < 0 || coordinate.y >= rows) true else getCoordinateBlock(
-            coordinate
-        )!!.state === BasicBlockState.ON_TETRAMINO
+        return if (coordinate.x < 0 || coordinate.x >= columns || coordinate.y < 0 || coordinate.y >= rows)
+            true //if its outside of bounds of board
+        else //else if there there is conflict between to tetramino blocks
+            getBlockOnBoardWith(coordinate)!!.state === BasicBlockState.ON_TETRAMINO
     }
 
     private fun canTetraminoDisplace(tetramino: Tetramino, displacement: Coordinate): Boolean {
@@ -73,7 +76,7 @@ class GameState(
                 if (block!!.state === BasicBlockState.ON_EMPTY) continue
                 val referenceBlock: BasicBlock? = falling.blocks.get(0)
                 val baseCoordinate: Coordinate =
-                    Coordinate.sub(block!!.coordinate, referenceBlock!!.coordinate)
+                    Coordinate.subtract(block!!.coordinate, referenceBlock!!.coordinate)
                 if (isConflicting(
                         Coordinate.add(
                             Coordinate.rotateAntiClock(baseCoordinate),
@@ -92,7 +95,7 @@ class GameState(
     fun paintTetramino(tetramino: Tetramino) {
         for (block in tetramino.blocks) {
             if (block!!.state === BasicBlockState.ON_EMPTY) continue
-            getCoordinateBlock(block!!.coordinate)!!.set(block)
+            getBlockOnBoardWith(block!!.coordinate)!!.set(block)
         }
     }
 
@@ -101,7 +104,7 @@ class GameState(
         falling = Tetramino(tetraminoType!!, ctr)
         tetraminos.put(ctr, falling)
         for (block in falling.blocks) {
-            if (getCoordinateBlock(block!!.coordinate)!!.state === BasicBlockState.ON_TETRAMINO) status =
+            if (getBlockOnBoardWith(block!!.coordinate)!!.state === BasicBlockState.ON_TETRAMINO) gameIsRunning =
                 false
         }
     }
@@ -145,7 +148,7 @@ class GameState(
                                 if (upperBlock!!.coordinate.y >= block.coordinate.y) {
                                     upperBlock.state = BasicBlockState.ON_EMPTY
                                 } else {
-                                    getCoordinateBlock(upperBlock.coordinate)!!.tetraId =
+                                    getBlockOnBoardWith(upperBlock.coordinate)!!.tetraId =
                                         upperBlock.tetraId
                                 }
                             }
@@ -156,7 +159,7 @@ class GameState(
                                 if (lowerBlock!!.coordinate.y <= block.coordinate.y) {
                                     lowerBlock.state = BasicBlockState.ON_EMPTY
                                 } else {
-                                    getCoordinateBlock(lowerBlock.coordinate)!!.tetraId =
+                                    getBlockOnBoardWith(lowerBlock.coordinate)!!.tetraId =
                                         lowerBlock.tetraId
                                 }
                             }
@@ -196,12 +199,12 @@ class GameState(
             if (shouldShiftDown) {
                 for (block in tetramino.blocks) {
                     if (block!!.state === BasicBlockState.ON_EMPTY) continue
-                    getCoordinateBlock(block!!.coordinate)!!.setEmptyBlock(block.coordinate)
+                    getBlockOnBoardWith(block!!.coordinate)!!.setEmptyBlock(block.coordinate)
                     block.coordinate.y++
                 }
                 for (block in tetramino.blocks) {
                     if (block!!.state === BasicBlockState.ON_EMPTY) continue
-                    getCoordinateBlock(block!!.coordinate)!!.set(block)
+                    getBlockOnBoardWith(block!!.coordinate)!!.set(block)
                 }
                 shiftTillBottom = true
             }

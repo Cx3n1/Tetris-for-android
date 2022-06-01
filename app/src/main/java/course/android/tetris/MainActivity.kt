@@ -13,6 +13,7 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
         play = findViewById(R.id.play)
+
         play!!.setOnClickListener {
             val intent = Intent(this, Game::class.java)
             startActivity(intent)
