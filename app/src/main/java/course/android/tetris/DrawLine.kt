@@ -17,7 +17,7 @@ class DrawView(context: Context?, gameState: GameState) :
     private var BOARD_COLUMNS = 10
 
     private val BOUNDARY_COLOR = Color.BLACK
-    private val BOUNDARY_WIDTH = 10f
+    private val BOUNDARY_WIDTH = 20f
 
     private val GRID_COLOR = Color.rgb(61, 90, 128)
     private val GRID_WIDTH = 7f
@@ -90,10 +90,22 @@ class DrawView(context: Context?, gameState: GameState) :
         paint.strokeWidth = BOUNDARY_WIDTH
 
         //left line
-        canvas.drawLine(0f, 0f, 0f, parentHeight!!.toFloat(), paint)
+        canvas.drawLine(
+            0f,
+            0f,
+            0f,
+            parentHeight!!.toFloat(),
+            paint
+        )
 
         //top line
-        canvas.drawLine(0f, 0f, parentWidth!!.toFloat(), 0f, paint)
+        canvas.drawLine(
+            0f,
+            0f,
+            parentWidth!!.toFloat(),
+            0f,
+            paint
+        )
 
         //bottom line
         canvas.drawLine(
@@ -134,8 +146,9 @@ class DrawView(context: Context?, gameState: GameState) :
 
     public override fun onDraw(canvas: Canvas) {
         super.onDraw(canvas)
-        parentHeight = 1300;//(parent as View).height
-        parentWidth = 850//(parent as View).width
+        //TODO: remove this hardcoded mess (by implanting draw view inside some layout or smt
+        parentHeight = (parent as View).height
+        parentWidth = (parent as View).width
         verticalRatio = (parentHeight!! / BOARD_ROWS)
         horizontalRatio = (parentWidth!! / BOARD_COLUMNS)
 

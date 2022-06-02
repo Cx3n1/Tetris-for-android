@@ -44,7 +44,6 @@ class Tetramino {
         }
     }
 
-
     private constructor(blocks: Array<BasicBlock?>) {
         this.blocks = blocks
     }
@@ -178,7 +177,5 @@ class Tetramino {
             )
         )
     }
-
-
 
 }

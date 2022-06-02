@@ -11,6 +11,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.*
 import androidx.appcompat.app.AppCompatActivity
+import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.core.app.ActivityCompat
 import androidx.fragment.app.Fragment
 import course.android.tetris.data.TetraminoType
@@ -37,7 +38,7 @@ class Game : /*Fragment(R.layout.fragment_game),*/AppCompatActivity(), View.OnCl
     var left: ImageButton? = null
     var right: ImageButton? = null
     var rotateAc: ImageButton? = null
-    var game: RelativeLayout? = null
+    var game: ConstraintLayout? = null
     var pause: Button? = null
     var score: TextView? = null
     var difficultyToggle: Button? = null
@@ -50,13 +51,17 @@ class Game : /*Fragment(R.layout.fragment_game),*/AppCompatActivity(), View.OnCl
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_testris);
+        findViewById<RelativeLayout>(R.id.main).setBackgroundColor(Color.rgb(61, 90, 128))
 
         gameState = GameState(BOARD_ROWS, BOARD_COLUMNS, TetraminoType.getRandomTetramino())
 
         //TODO how to add draw view inside ftagment
         drawView = DrawView(this, gameState!!)
 
-        var  param: RelativeLayout.LayoutParams = RelativeLayout.LayoutParams(850,1300);
+        var  param: ConstraintLayout.LayoutParams =
+            ConstraintLayout.LayoutParams(
+                ConstraintLayout.LayoutParams.MATCH_PARENT,
+                ConstraintLayout.LayoutParams.MATCH_PARENT);
 
         drawView!!.layoutParams = param;
 
@@ -64,8 +69,7 @@ class Game : /*Fragment(R.layout.fragment_game),*/AppCompatActivity(), View.OnCl
 
         score = findViewById(R.id.txtv_score);
 
-        game = findViewById(R.id.main);
-        game!!.setBackgroundColor(Color.rgb(61, 90, 128))
+        game = findViewById(R.id.constLay_game_view)
 
         delay = 500
         delayLowerLimit = 200
