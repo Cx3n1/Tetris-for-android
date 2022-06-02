@@ -15,10 +15,10 @@ class GameState(
     var board: Array<Array<BasicBlock?>>
     var falling: Tetramino
     var difficultMode = false //remove this
-    private var ctr = 0
+    private var createdTetraminoIndex = 0
     private val tetraminos: SparseArray<Tetramino>
 
-    private fun getBlockOnBoardWith(coordinate: Coordinate): BasicBlock? {
+    private fun getBlockOnBoardOn(coordinate: Coordinate): BasicBlock? {
         return board[coordinate.y][coordinate.x]
     }
 
@@ -26,7 +26,7 @@ class GameState(
         return if (coordinate.x < 0 || coordinate.x >= columns || coordinate.y < 0 || coordinate.y >= rows)
             true //if its outside of bounds of board
         else //else if there there is conflict between to tetramino blocks
-            getBlockOnBoardWith(coordinate)!!.state === BasicBlockState.ON_TETRAMINO
+            getBlockOnBoardOn(coordinate)!!.state === BasicBlockState.ON_TETRAMINO
     }
 
     private fun canTetraminoDisplace(tetramino: Tetramino, displacement: Coordinate): Boolean {
@@ -75,8 +75,10 @@ class GameState(
             for (block in falling.blocks) {
                 if (block!!.state === BasicBlockState.ON_EMPTY) continue
                 val referenceBlock: BasicBlock? = falling.blocks.get(0)
+
                 val baseCoordinate: Coordinate =
                     Coordinate.subtract(block!!.coordinate, referenceBlock!!.coordinate)
+
                 if (isConflicting(
                         Coordinate.add(
                             Coordinate.rotateAntiClock(baseCoordinate),
@@ -95,16 +97,20 @@ class GameState(
     fun paintTetramino(tetramino: Tetramino) {
         for (block in tetramino.blocks) {
             if (block!!.state === BasicBlockState.ON_EMPTY) continue
-            getBlockOnBoardWith(block!!.coordinate)!!.set(block)
+            getBlockOnBoardOn(block!!.coordinate)!!.set(block)
         }
     }
 
     fun pushNewTetramino(tetraminoType: TetraminoType?) {
-        ctr++
-        falling = Tetramino(tetraminoType!!, ctr)
-        tetraminos.put(ctr, falling)
+        createdTetraminoIndex++
+
+        falling = Tetramino(tetraminoType!!, createdTetraminoIndex)
+
+        tetraminos.put(createdTetraminoIndex, falling)
+
+        //if new tetramino hits other tetramino straight up then game has ended
         for (block in falling.blocks) {
-            if (getBlockOnBoardWith(block!!.coordinate)!!.state === BasicBlockState.ON_TETRAMINO) gameIsRunning =
+            if (getBlockOnBoardOn(block!!.coordinate)!!.state === BasicBlockState.ON_TETRAMINO) gameIsRunning =
                 false
         }
     }
@@ -141,25 +147,25 @@ class GameState(
                         }
                         if (block!!.coordinate.y === row && block!!.coordinate.x === column) {
                             block!!.state = BasicBlockState.ON_EMPTY
-                            ctr++
-                            val upperTetramino = tetramino.copy(ctr)
-                            tetraminos.put(ctr, upperTetramino)
+                            createdTetraminoIndex++
+                            val upperTetramino = tetramino.copy(createdTetraminoIndex)
+                            tetraminos.put(createdTetraminoIndex, upperTetramino)
                             for (upperBlock in upperTetramino.blocks) {
                                 if (upperBlock!!.coordinate.y >= block.coordinate.y) {
                                     upperBlock.state = BasicBlockState.ON_EMPTY
                                 } else {
-                                    getBlockOnBoardWith(upperBlock.coordinate)!!.tetraId =
+                                    getBlockOnBoardOn(upperBlock.coordinate)!!.tetraId =
                                         upperBlock.tetraId
                                 }
                             }
-                            ctr++
-                            val lowerTetramino = tetramino.copy(ctr)
-                            tetraminos.put(ctr, lowerTetramino)
+                            createdTetraminoIndex++
+                            val lowerTetramino = tetramino.copy(createdTetraminoIndex)
+                            tetraminos.put(createdTetraminoIndex, lowerTetramino)
                             for (lowerBlock in lowerTetramino.blocks) {
                                 if (lowerBlock!!.coordinate.y <= block.coordinate.y) {
                                     lowerBlock.state = BasicBlockState.ON_EMPTY
                                 } else {
-                                    getBlockOnBoardWith(lowerBlock.coordinate)!!.tetraId =
+                                    getBlockOnBoardOn(lowerBlock.coordinate)!!.tetraId =
                                         lowerBlock.tetraId
                                 }
                             }
@@ -199,12 +205,12 @@ class GameState(
             if (shouldShiftDown) {
                 for (block in tetramino.blocks) {
                     if (block!!.state === BasicBlockState.ON_EMPTY) continue
-                    getBlockOnBoardWith(block!!.coordinate)!!.setEmptyBlock(block.coordinate)
+                    getBlockOnBoardOn(block!!.coordinate)!!.setEmptyBlock(block.coordinate)
                     block.coordinate.y++
                 }
                 for (block in tetramino.blocks) {
                     if (block!!.state === BasicBlockState.ON_EMPTY) continue
-                    getBlockOnBoardWith(block!!.coordinate)!!.set(block)
+                    getBlockOnBoardOn(block!!.coordinate)!!.set(block)
                 }
                 shiftTillBottom = true
             }
@@ -227,7 +233,7 @@ class GameState(
             }
         }
         tetraminos = SparseArray()
-        falling = Tetramino(fallingTetraminoType!!, ctr)
-        tetraminos.put(ctr, falling)
+        falling = Tetramino(fallingTetraminoType!!, createdTetraminoIndex)
+        tetraminos.put(createdTetraminoIndex, falling)
     }
 }

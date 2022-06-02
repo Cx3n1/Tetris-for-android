@@ -5,24 +5,27 @@ import android.graphics.Color
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
+import android.os.PersistableBundle
+import android.view.LayoutInflater
 import android.view.View
-import android.widget.Button
-import android.widget.FrameLayout
-import android.widget.RelativeLayout
-import android.widget.TextView
+import android.view.ViewGroup
+import android.widget.*
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.app.ActivityCompat
+import androidx.fragment.app.Fragment
 import course.android.tetris.data.TetraminoType
+import java.util.zip.Inflater
 
 
-class Game : AppCompatActivity(), View.OnClickListener {
+class Game : /*Fragment(R.layout.fragment_game),*/AppCompatActivity(), View.OnClickListener {
 
     //TODO: This needs to be discussed
     companion object{
         /***
          * standard board size is 10x20
          */
-        val BOARD_ROWS = 24//10
-        val BOARD_COLUMNS = 20
+        val BOARD_ROWS = 20
+        val BOARD_COLUMNS = 10
 
         fun getMiddleReference(): Int{
             return BOARD_COLUMNS/2; //integer division is intentional
@@ -31,11 +34,10 @@ class Game : AppCompatActivity(), View.OnClickListener {
 
     var drawView: DrawView? = null
     var gameState: GameState? = null
-    var gameButtons: RelativeLayout? = null
-    var left: Button? = null
-    var right: Button? = null
-    var rotateAc: Button? = null
-    var game: FrameLayout? = null
+    var left: ImageButton? = null
+    var right: ImageButton? = null
+    var rotateAc: ImageButton? = null
+    var game: RelativeLayout? = null
     var pause: Button? = null
     var score: TextView? = null
     var difficultyToggle: Button? = null
@@ -47,22 +49,37 @@ class Game : AppCompatActivity(), View.OnClickListener {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_game)
+        setContentView(R.layout.activity_testris);
 
         gameState = GameState(BOARD_ROWS, BOARD_COLUMNS, TetraminoType.getRandomTetramino())
 
+        //TODO how to add draw view inside ftagment
         drawView = DrawView(this, gameState!!)
-        drawView!!.setBackgroundColor(Color.rgb(165, 165, 141))
 
-        game = FrameLayout(this)
+        var  param: RelativeLayout.LayoutParams = RelativeLayout.LayoutParams(850,1300);
 
-        gameButtons = RelativeLayout(this)
+        drawView!!.layoutParams = param;
+
+        drawView!!.setBackgroundColor(Color.rgb(224, 251, 252))
+
+        score = findViewById(R.id.txtv_score);
+
+        game = findViewById(R.id.main);
+        game!!.setBackgroundColor(Color.rgb(61, 90, 128))
 
         delay = 500
         delayLowerLimit = 200
         delayFactor = 2
 
-        left = Button(this)
+
+        game!!.addView(drawView)
+
+        left = findViewById(R.id.btn_left)
+        right = findViewById(R.id.btn_right)
+        rotateAc = findViewById(R.id.btn_rotate)
+
+
+       /* left = Button(this)
         left!!.setText(R.string.left)
         left!!.id = R.id.left
 
@@ -86,90 +103,14 @@ class Game : AppCompatActivity(), View.OnClickListener {
         difficultyToggle = Button(this)
         difficultyToggle!!.setText(R.string.easy)
         difficultyToggle!!.id = R.id.difficulty
-
-        val rl = RelativeLayout.LayoutParams(
-            RelativeLayout.LayoutParams.WRAP_CONTENT,
-            RelativeLayout.LayoutParams.WRAP_CONTENT
-        )
-
-        val leftButton = RelativeLayout.LayoutParams(
-            RelativeLayout.LayoutParams.WRAP_CONTENT,
-            RelativeLayout.LayoutParams.WRAP_CONTENT
-        )
-
-        val rightButton = RelativeLayout.LayoutParams(
-            RelativeLayout.LayoutParams.WRAP_CONTENT,
-            RelativeLayout.LayoutParams.WRAP_CONTENT
-        )
-
-        val downButton = RelativeLayout.LayoutParams(
-            RelativeLayout.LayoutParams.WRAP_CONTENT,
-            RelativeLayout.LayoutParams.WRAP_CONTENT
-        )
-
-        val pausebutton = RelativeLayout.LayoutParams(
-            RelativeLayout.LayoutParams.WRAP_CONTENT,
-            RelativeLayout.LayoutParams.WRAP_CONTENT
-        )
-
-        val scoretext = RelativeLayout.LayoutParams(
-            RelativeLayout.LayoutParams.WRAP_CONTENT,
-            RelativeLayout.LayoutParams.WRAP_CONTENT
-        )
-
-        val speedbutton = RelativeLayout.LayoutParams(
-            RelativeLayout.LayoutParams.WRAP_CONTENT,
-            RelativeLayout.LayoutParams.WRAP_CONTENT
-        )
-
-        gameButtons!!.layoutParams = rl
+*/
 
 
-        gameButtons!!.addView(left)
-        gameButtons!!.addView(right)
-        gameButtons!!.addView(rotateAc)
-        gameButtons!!.addView(pause)
-        gameButtons!!.addView(score)
-        gameButtons!!.addView(difficultyToggle)
+        left!!.setOnClickListener(this)
 
-        leftButton.addRule(RelativeLayout.ALIGN_PARENT_LEFT, RelativeLayout.TRUE)
-        leftButton.addRule(RelativeLayout.ALIGN_PARENT_BOTTOM, RelativeLayout.TRUE)
-        rightButton.addRule(RelativeLayout.ALIGN_PARENT_RIGHT, RelativeLayout.TRUE)
-        rightButton.addRule(RelativeLayout.ALIGN_PARENT_BOTTOM, RelativeLayout.TRUE)
-        downButton.addRule(RelativeLayout.CENTER_HORIZONTAL, RelativeLayout.TRUE)
-        downButton.addRule(RelativeLayout.ALIGN_PARENT_BOTTOM, RelativeLayout.TRUE)
-        pausebutton.addRule(RelativeLayout.ALIGN_PARENT_RIGHT, RelativeLayout.TRUE)
-        pausebutton.addRule(RelativeLayout.ALIGN_PARENT_TOP, RelativeLayout.TRUE)
-        scoretext.addRule(RelativeLayout.ALIGN_PARENT_LEFT, RelativeLayout.TRUE)
-        scoretext.addRule(RelativeLayout.ALIGN_PARENT_TOP, RelativeLayout.TRUE)
-        speedbutton.addRule(RelativeLayout.CENTER_HORIZONTAL, RelativeLayout.TRUE)
-        speedbutton.addRule(RelativeLayout.ALIGN_PARENT_TOP, RelativeLayout.TRUE)
+        right!!.setOnClickListener(this)
 
-        left!!.layoutParams = leftButton
-        right!!.layoutParams = rightButton
-        rotateAc!!.layoutParams = downButton
-        pause!!.layoutParams = pausebutton
-        score!!.layoutParams = scoretext
-        difficultyToggle!!.layoutParams = speedbutton
-        game!!.addView(drawView)
-        game!!.addView(gameButtons)
-
-        setContentView(game)
-
-        val leftButtonListener: View = findViewById(R.id.left)
-        leftButtonListener.setOnClickListener(this)
-
-        val rightButtonListener: View = findViewById(R.id.right)
-        rightButtonListener.setOnClickListener(this)
-
-        val rotateACButtonListener: View = findViewById(R.id.rotate_ac)
-        rotateACButtonListener.setOnClickListener(this)
-
-        val pauseButtonListener: View = findViewById(R.id.pause)
-        pauseButtonListener.setOnClickListener(this)
-
-        val speedButtonListener: View = findViewById(R.id.difficulty)
-        speedButtonListener.setOnClickListener(this)
+        rotateAc!!.setOnClickListener(this)
 
         handler = Handler(Looper.getMainLooper())
 
@@ -186,6 +127,7 @@ class Game : AppCompatActivity(), View.OnClickListener {
                                 delay = delay / delayFactor + 1
                             }
                             gameState!!.incrementScore()
+                            //TODO:Send new score to main thread to display
                         }
                         drawView!!.invalidate()
                         handler!!.postDelayed(this, delay.toLong())
@@ -233,12 +175,4 @@ class Game : AppCompatActivity(), View.OnClickListener {
             }
         }
     }
-
-
-
-
-
-
-
-
 }
