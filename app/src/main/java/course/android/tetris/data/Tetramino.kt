@@ -110,10 +110,10 @@ class Tetramino {
     private fun generateLine(tetraId: Int) = blocksGenerator(
         tetraId, 7,
         arrayOf(
-            Coordinate(0, 10),
-            Coordinate(1, 10),
-            Coordinate(2, 10),
-            Coordinate(3, 10)
+            Coordinate(0, boardMiddleReference),
+            Coordinate(1, boardMiddleReference),
+            Coordinate(2, boardMiddleReference),
+            Coordinate(3, boardMiddleReference)
         )
     )
 
